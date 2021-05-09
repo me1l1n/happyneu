@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.example.pojo.Order" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ms" property="ms" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="u_id" property="uId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ms, date, comment, u_id, status, type, money
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from `order`
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from `order`
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.pojo.Order" >
+    insert into `order` (id, ms, date,
+      comment, u_id, status, 
+      type, money)
+    values (#{id,jdbcType=INTEGER}, #{ms,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, 
+      #{comment,jdbcType=VARCHAR}, #{uId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{money,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.pojo.Order" >
+    insert into `order`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ms != null" >
+        ms,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="ms != null" >
+        #{ms,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="uId != null" >
+        #{uId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.Order" >
+    update `order`
+    <set >
+      <if test="ms != null" >
+        ms = #{ms,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        date = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="uId != null" >
+        u_id = #{uId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.pojo.Order" >
+    update `order`
+    set ms = #{ms,jdbcType=VARCHAR},
+      date = #{date,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      u_id = #{uId,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      money = #{money,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getList" resultType="java.util.Map">
+    select o.*,u.nickName,u.avatarUrl from `order` o ,user u where u.id = o.u_id
+    <if test="uId != null">
+      and o.u_id = #{uId}
+    </if>
+    <if test="status != null and status != ''">
+      and o.status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null and type != ''">
+      and o.type = #{type}
+    </if>
+    order by o.date desc
+  </select>
+
+  <select id="findList" resultType="java.util.Map">
+    select o.*,u.nickName,u.avatarUrl,s.id ids from `order` o ,user u,orders s  where u.id = o.u_id and s.o_id = o.id and s.u_id = #{uId}
+  </select>
+</mapper>
